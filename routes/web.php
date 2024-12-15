@@ -25,6 +25,7 @@ Route::middleware([
     Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
     Route::post('/dashboard', [DashboardController::class, 'index']);
     Route::post('/exportExcel', [ExcelController::class, 'exportExcel']);
+    Route::post('/exportRemainingExcel', [ExcelController::class, 'exportRemainingExcel']);
     Route::post('/add-purchase', [DashboardController::class, 'addPurchase']);
     Route::post('/add-winning', [DashboardController::class, 'addWinning']);
     Route::post('/edit-purchase/{id}', [DashboardController::class, 'editPurchase']);

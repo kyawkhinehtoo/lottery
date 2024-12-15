@@ -33,7 +33,9 @@ class DashboardController extends Controller
                         ->orWhere('customer_phone', 'LIKE', '%' . $general . '%');
                 });
             })
-
+            ->when($request->showRemaining, function ($query, $showRemaining) {
+                dd($showRemaining);
+            })
             ->orderBy('id', 'DESC')->paginate(5, ['*'], 'purchase_numbers');
         $purchaseNumbers->appends($request->all())->links();
 

@@ -97,6 +97,7 @@ export default {
             required: true,
         },
         amount: Number,
+        title: String,
         display: String
     },
     setup(props) {
@@ -215,7 +216,7 @@ export default {
 
         const checkout = () => {
             Toast.fire({
-                title: "ငွေပေးခြေရန်",
+                title: props.title,
                 html: props.display,
                 icon: "warning",
                 position: "center",

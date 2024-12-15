@@ -9,7 +9,7 @@
 
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <!--All Card-->
-            <div class="grid gap-2 md:gap-6 sm:grid-cols-2 lg:grid-cols-5 py-6">
+            <div class="grid gap-2 md:gap-6 grid-cols-2 lg:grid-cols-5 py-6">
                 <!-- Card -->
                 <div class="flex items-center p-4 bg-white rounded-lg shadow-sm dark:bg-gray-800">
                     <div
@@ -63,7 +63,8 @@
                 </div>
                 <!-- End Card -->
                 <!-- Card -->
-                <div class="flex items-center p-4 bg-white rounded-lg shadow-sm dark:bg-gray-800">
+                <div
+                    class="flex items-center p-4 bg-white rounded-lg shadow-sm dark:bg-gray-800 col-span-2 md:col-span-1">
                     <div
                         class="px-4 py-2 text-purple-500 bg-purple-100 rounded-full dark:text-purple-100 dark:bg-purple-500">
                         <i class="fa fa-dollar-sign "></i>
@@ -82,7 +83,7 @@
 
                         <p class="text-lg font-semibold text-gray-700 dark:text-gray-200">{{
                             formatNumber(amount)
-                            }}</p>
+                        }}</p>
                     </div>
                 </div>
                 <!-- End Card -->
@@ -90,7 +91,7 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div class="bg-white dark:bg-gray-800 p-4  shadow-xl sm:rounded-lg col-span-3">
+                <div class="bg-white dark:bg-gray-800 p-4  shadow-xl sm:rounded-lg md:col-span-3">
 
                     <div class="flex justify-between w-full">
                         <div>
@@ -106,60 +107,104 @@
 
                     </div>
 
-                    <div class="grid grid-cols-4 gap-4 my-4">
+                    <div class="grid grid-cols-1 md:grid-cols-5 gap-4 my-4">
                         <div class="col-span-1">
-                            <span
-                                class="leading-snug font-normal text-center text-gray-400 absolute bg-transparent rounded text-base items-center justify-center w-8 pl-3 py-2">
-                                <i class="fas fa-search"></i>
-                            </span>
-                            <input type="text" v-model="searchForm.general" name="general" id="general"
-                                class="pl-10 focus:ring focus:ring-indigo-500 focus:border-indigo-500 focus:ring-opacity-10 focus:outline-none flex-1 block w-full rounded-md sm:text-sm border-gray-200"
-                                placeholder="Number, Name, etc." v-on:keypress.enter="searchData" />
+                            <!-- <label for="general" class="text-sm">Enter No./ Name/ etc.</label> -->
+                            <div> <span
+                                    class="leading-snug font-normal text-center text-gray-400 absolute bg-transparent rounded text-base items-center justify-center w-8 pl-3 py-2">
+                                    <i class="fas fa-search"></i>
+                                </span>
+                                <input type="text" v-model="searchForm.general" name="general" id="general"
+                                    class="pl-10 focus:ring focus:ring-indigo-500 focus:border-indigo-500 focus:ring-opacity-10 focus:outline-none flex-1 block w-full rounded-md sm:text-sm border-gray-200"
+                                    placeholder="Number, Name, etc." v-on:keypress.enter="searchData" />
+                            </div>
+
                         </div>
-                        <div class="col-span-2">
+                        <div class="col-span-1 md:col-span-2">
+                            <!-- <label for="date-range" class="text-sm">Select Date Range</label> -->
                             <VueDatePicker v-model="searchForm.date" :range="{ partialRange: true }"
-                                :enable-time-picker="false" model-type="yyyy-MM-dd"
+                                :enable-time-picker="false" model-type="yyyy-MM-dd" id="date-range"
                                 class="text-gray-400 text-sm focus:ring focus:ring-indigo-500 focus:border-indigo-500 focus:ring-opacity-10 focus:outline-none" />
                         </div>
-                        <div class="flex justify-end w-full">
-                            <button @click="searchData" class="bg-indigo-600 text-white px-4 py-2 rounded text-sm">
-                                Search <i class="fa fa-search ml-2"></i>
+
+                        <div class="col-span-1 md:col-span-2 flex justify-between w-full content-end ">
+
+
+                            <button @click="searchData"
+                                class="bg-indigo-600 text-white px-4 py-2 rounded text-sm whitespace-nowrap">
+                                Search <i class="fa fa-search ml-1"></i>
                             </button>
                             <button @click="downloadExcel"
-                                class="bg-green-800 text-white px-4 py-2 rounded text-sm ml-2">
-                                Excel <i class="fa fa-file-excel ml-2"></i>
+                                class="bg-green-800 text-white px-4 py-2 rounded text-sm ml-2 whitespace-nowrap">
+                                Sold Out <i class="fa fa-file-excel ml-1"></i>
                             </button>
+                            <button @click="downloadRemainingExcel"
+                                class="bg-green-800 text-white px-4 py-2 rounded text-sm ml-2 whitespace-nowrap">
+                                Remaining <i class="fa fa-file-excel ml-1"></i>
+                            </button>
+
+
                         </div>
                     </div>
+                    <div class="hidden md:block">
+                        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                            <thead
+                                class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3">Number</th>
+                                    <th scope="col" class="px-6 py-3">Amount</th>
+                                    <th scope="col" class="px-6 py-3">Name</th>
+                                    <th scope="col" class="px-6 py-3">Phone</th>
+                                    <th scope="col" class="px-6 py-3">Purchase Date</th>
+                                    <th scope="col" class="px-6 py-3">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="purchase in purchaseNumbers.data" :key="purchase.id"
+                                    class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                    <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{
+                                        purchase.number }}</td>
+                                    <td class="px-6 py-4">{{ purchase.amount }}</td>
+                                    <td class="px-6 py-4">{{ purchase.customer_name }}</td>
+                                    <td class="px-6 py-4">{{ purchase.customer_phone }}</td>
+                                    <td class="px-6 py-4">{{ purchase.purchase_date }}</td>
+                                    <td class="px-6 py-4">
+                                        <button @click="openEditPurchaseModal(purchase)"
+                                            class="text-blue-500">Edit</button>
+                                        <button @click="deletePurchase(purchase.id)"
+                                            class="text-red-500 ml-4">Delete</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="md:hidden divide-y divide-solid">
+                        <div v-for="purchase in purchaseNumbers.data" :key="purchase.id" class="grid grid-cols-4 py-5">
+                            <div>
+                                <span class="text-sm text-gray-500">{{ purchase.purchase_date }}</span>
+                            </div>
+                            <div>
+                                <span
+                                    class="bg-blue-100 text-blue-800 text-sm font-bold me-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">{{
+                                        purchase.number }} </span> <br />
+                                <span class="text-sm text-gray-500  w-full">{{ purchase.amount }} MMK</span>
+                            </div>
+                            <div>
+                                <span class="text-sm text-gray-500 w-full">{{ purchase.customer_name }}</span> <br />
+                                <span class="text-sm text-gray-500  w-full">{{ purchase.customer_phone }}</span>
+                            </div>
+                            <div class="text-sm text-gray-400 w-full grid justify-end">
+                                <div>
+                                    <button @click="openEditPurchaseModal(purchase)" class="text-yellow-500 text-sm"><i
+                                            class="fa fa-pen"></i></button> |
+                                    <button @click="deletePurchase(purchase.id)" class="text-red-600 text-sm"><i
+                                            class="fa fa-trash"></i></button>
+                                </div>
 
-                    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                            <tr>
-                                <th scope="col" class="px-6 py-3">Number</th>
-                                <th scope="col" class="px-6 py-3">Amount</th>
-                                <th scope="col" class="px-6 py-3">Name</th>
-                                <th scope="col" class="px-6 py-3">Phone</th>
-                                <th scope="col" class="px-6 py-3">Purchase Date</th>
-                                <th scope="col" class="px-6 py-3">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="purchase in purchaseNumbers.data" :key="purchase.id"
-                                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{
-                                    purchase.number }}</td>
-                                <td class="px-6 py-4">{{ purchase.amount }}</td>
-                                <td class="px-6 py-4">{{ purchase.customer_name }}</td>
-                                <td class="px-6 py-4">{{ purchase.customer_phone }}</td>
-                                <td class="px-6 py-4">{{ purchase.purchase_date }}</td>
-                                <td class="px-6 py-4">
-                                    <button @click="openEditPurchaseModal(purchase)" class="text-blue-500">Edit</button>
-                                    <button @click="deletePurchase(purchase.id)"
-                                        class="text-red-500 ml-4">Delete</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                            </div>
+                        </div>
+
+                    </div>
                     <span v-if="purchaseNumbers.total" class="w-full block mt-4">
                         <span
                             class="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">Showing
@@ -244,7 +289,7 @@
 
             <!--  Purchase Modal -->
             <div v-if="showPurchaseModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-                <div class="bg-white p-6 rounded w-1/3 ">
+                <div class="bg-white p-6 rounded w-full md:w-1/3 ">
                     <h2 class="text-lg font-bold mb-4" v-if="!purchaseEditMode">Add Purchase Info</h2>
                     <h2 class="text-lg font-bold mb-4" v-else>Edit Purchase Info</h2>
                     <form @submit.prevent="submitPurchase" class="grid gap-y-2">
@@ -294,7 +339,7 @@
 
             <!-- Add Winning Modal -->
             <div v-if="showWinningModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-                <div class="bg-white p-6 rounded w-1/3">
+                <div class="bg-white p-6 rounded w-full md:w-1/3">
                     <h2 class="text-lg font-bold mb-4" v-if="!winningEditMode">Add Winning Number</h2>
                     <h2 class="text-lg font-bold mb-4" v-else>Edit Winning Number</h2>
                     <form @submit.prevent="submitWinning" class="grid gap-y-2">
@@ -318,7 +363,7 @@
             </div>
             <!-- Price Modal -->
             <div v-if="showPriceModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-                <div class="bg-white p-6 rounded w-1/3">
+                <div class="bg-white p-6 rounded w-full md:w-1/3">
 
                     <h2 class="text-lg font-bold mb-4">Edit Config</h2>
                     <form @submit.prevent="submitPrice" class="grid gap-y-2">
@@ -359,12 +404,14 @@ import Pagination from '@/Components/Pagination.vue';
 import { onMounted, ref, computed } from 'vue';
 import { useForm, router } from '@inertiajs/vue3';
 import VueDatePicker from '@vuepic/vue-datepicker';
+import ToggleSwitch from '@/Components/ToggleSwitch.vue'
 import '@vuepic/vue-datepicker/dist/main.css'
 export default {
     name: 'Dashboard',
     components: {
         AppLayout,
         VueDatePicker,
+        ToggleSwitch,
         Pagination
     },
     props: {
@@ -384,7 +431,6 @@ export default {
         const winningEditMode = ref(false);
         const showWinningModal = ref(false);
         const showPriceModal = ref(false);
-
         const purchaseForm = useForm({
             number: "",
             purchase_date: "",
@@ -408,7 +454,7 @@ export default {
         const searchForm = useForm({
             general: "",
             winning: "",
-            date: ""
+            date: "",
         })
         const searchData = () => {
             searchForm.post(`/dashboard`, {
@@ -600,7 +646,22 @@ export default {
                 });
                 const link = document.createElement("a");
                 link.href = window.URL.createObjectURL(blob);
-                link.download = `data_${new Date().getTime()}.xlsx`;
+                link.download = `sold_${new Date().getTime()}.xlsx`;
+                link.click();
+            });
+        }
+        const downloadRemainingExcel = () => {
+            axios.post("/exportRemainingExcel", {}, { responseType: "blob" }).then((response) => {
+                console.log(response);
+                var a = document.createElement("a");
+                document.body.appendChild(a);
+                a.style = "display: none";
+                var blob = new Blob([response.data], {
+                    type: response.headers["content-type"],
+                });
+                const link = document.createElement("a");
+                link.href = window.URL.createObjectURL(blob);
+                link.download = `remaining_${new Date().getTime()}.xlsx`;
                 link.click();
             });
         }
@@ -638,7 +699,8 @@ export default {
             searchData,
             searchForm,
             formatNumber,
-            downloadExcel
+            downloadExcel,
+            downloadRemainingExcel
         };
     },
 };
